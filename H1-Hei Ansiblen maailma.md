@@ -25,7 +25,7 @@
 * **Kysymys:** Mitä pitää tehdä, jos käyttäjä hukkaa oman yksityisen avaimensa, ja ei pääse enään käyttämään sitä?
 #### Karvinen 2026: [Hello Ansible](https://terokarvinen.com/hello-ansible/)
 * **Mikä on Ansible?** Se on konfiguraationhallinta työkalu, jolla pystyt kirjoittamaan infrastruktuuisi koodina, kuten: ohjelmien asennusten automatisointi sekä asetusten tekeminen useille koneille samanaikaisesti. 
-* Ansible on "**agentless**", eli se toimii suoraan tavallisen SSH-yhteyden yli ja kohdekoneille ei tarvitse asentaa minkäälaisia erillisiä Ansiblen taustapalveluita.
+* Ansible on "**agentless**", eli se toimii suoraan tavallisen SSH-yhteyden yli ja kohdekoneille ei tarvitse asentaa minkäänlaisia erillisiä Ansiblen taustapalveluita.
 * **Kysymys:** Miten pystyn varmistamaan, että tehtävä suoritetaan vain tarvittaessa?
 ## SSH-demonin asennus ja sen testaus
 
