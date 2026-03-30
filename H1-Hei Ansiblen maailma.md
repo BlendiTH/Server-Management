@@ -3,11 +3,17 @@
 ## Ympäristö
 
 **OS**: Kali GNU/Linux Rolling
+
 **Browser**: Mozilla Firefox 140.8.0esr
+
 **Hardware** Model: Virtualbox memory used 11 GB
+
 **Processor**: AMD Ryzen 7 7800X3D | 4 cores used
+
 **GPU**: NVIDIA GeForce RTX 5070 Ti 16GB
+
 **Disk**: 80 GB
+
 **Network**: NAT
 
 ## Artikkelit ja niiden tiivistelmät
