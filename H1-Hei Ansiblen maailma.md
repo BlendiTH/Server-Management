@@ -95,7 +95,7 @@ cd ~/ansible
 
 3. Seuraavaksi, luodaan tiedosto `hosts.ini` joka kertoo Ansiblelle, mitä koneita hallitaan.
 
-```TOML
+```ini
 localhost
 
 [all:vars]
@@ -104,7 +104,7 @@ ansible_python_interpreter=/usr/bin/python3
 
 4. **Tehdään myös varmuuden vuoksi asetustiedosto (`micro ansible.cfg`), jotta olisi helpompi jatkossa!**
 
-```TOML
+```ini
 [defaults]
 inventory = hosts.ini
 ```
