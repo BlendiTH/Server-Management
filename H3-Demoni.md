@@ -241,17 +241,26 @@ ansible-playbook -i hosts.ini site.yml -u berry
 <img width="999" height="526" alt="image" src="https://github.com/user-attachments/assets/694bf4c3-6ffd-4183-ab13-40db8f44f07f" />
 
 ## Yhteenveto
-**Palvelimet:** Asensimme Apachen ja Nginxin tarjoilemaan weppisivuja omasta kansiostamme.
-**Automaatio:** Automatisoimme Nginxin asennuksen Ansiblella, hyödyntäen "package-file-service" mallia.
-**Teoria:** Ymmärsimme kuinka tuo "package-file-service" malli toimii, ja kuinka Ansilen handlerit säästävät resursseja tekemällä uudelleenkäynnistyksen vain tarvittaessa.
+- **Palvelimet:** Asensimme Apachen ja Nginxin tarjoilemaan weppisivuja omasta kansiostamme.
+
+- **Automaatio:** Automatisoimme Nginxin asennuksen Ansiblella, hyödyntäen "package-file-service" mallia.
+
+- **Teoria:** Ymmärsimme kuinka tuo "package-file-service" malli toimii, ja kuinka Ansilen handlerit säästävät resursseja tekemällä uudelleenkäynnistyksen vain tarvittaessa.
+
 
 ## Lähteet
 [Apache installed with Ansible - quick notes](https://terokarvinen.com/apache-ansible/)
+
 [Handlers: running operations on change](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_handlers.html)
+
 Ansiblen sisäänrakennettu dokumentaatio (ansible-doc **service**)
+
 [nginx documentation](https://nginx.org/en/docs/)
+
 [Reddit julkaisu Nginx:istä](https://www.reddit.com/r/nginx/comments/mvatwk/what_is_nginx_explain_to_me_like_im_5_because_im/)
+
 [Nginx cheatsheet, Vishnu Chilamakuru](https://dev.to/vishnuchilamakuru/nginx-cheatsheet-24ph)
+
 
 [^1]: **www-data:** Tarkoittaa käyttäjää, jonka oikeuksillä weppipalvelintoimii, se on hyväksy tietoturvalle koska jos palvelin murretaan, hyökkääjä saa vain rajoitetut oikeudet. Tämän takia annoimme (others) vain oikeuden lukea tiedostoamme!
 [^2]: **Miksi käytin {}:** Tämä tulee Bashin komentotulkinnasta "brace expansion". Sen avulla voimme säästää aikaa jos olemme luomassa useita kansioita kerrallaan, esimerkkinä, komento: `mkdir {a, b, c}` luo kansiot a, b ja c vain tuolla yhdellä komennolla.
