@@ -155,9 +155,124 @@ Kirjoitetaan tiedostoon koodi, jonka avulla voimme asentaa paketin, kopioi `jail
 
 ```bash
 cd ~/tansible
-ansible-playbook -i hosts.ini site.yml
+ansible-playbook -i hosts.ini site.yml -u berry
 ```
 
 <img width="1001" height="264" alt="image" src="https://github.com/user-attachments/assets/797ac04d-3fc3-476d-a484-1ed347610d35" />
 
-## 
+## Master Copyn muokkaus ja käyttöönotto
+
+Voimme aloittaa automaation toiminnan testaamisen, muuttamalla Fail2Banin asetuksia omalla koneellamme Ansiblen avulla ja pakottamalla ne voimaan kohdepalvelimelle.
+
+1. Ensin, käydään muokkaamassa pääkopiota asetustiedostosta joka on Ansiblen `files` kansiossa. Oletuksena Fail2Ban antaa hyökkääjille 10 minuutin bännit (`bantime = 10m`). Muokataan bänni aikaa nostamalla sitä 1 tuntiin:
+
+```bash
+micro ~/tansible/roles/fail2ban/files/jail.local
+```
+
+Etsitään tiedostosta rivi jossa lukee `bantime = 10m` joka löytyy **[DEFAULT]** osion alta. Muutetaan se seuraavaksi muotoon `bantime = 60m`
+
+<img width="817" height="75" alt="image" src="https://github.com/user-attachments/assets/c3f8a66b-f037-4d57-aa06-531b68a51b2c" />
+<br>
+
+2. Ajetaan pelikirja uudelleen, jotta Ansiblen `copy` moduuli huomaa tiedoston muuttuneen ja kutsuu handlerin käynnistämään palvelun uudelleen:
+
+```bash
+ansible-playbook -i hosts.ini site.yml -u berry
+```
+
+<img width="996" height="248" alt="image" src="https://github.com/user-attachments/assets/3a718a5c-b534-40fa-ab26-f524d0265c32" />
+<br>
+
+3. Tarkistetaan vielä Fail2Banin avulla, kysymällä siltä ottiko se uuden asetuksen käyttöön SSH-palvelun kohdalla. **HUOM:** Fail2Ban ilmoittaa ajat sekunneissa, joten 1h näkyy lukuna **3600**: [^5] 
+
+```bash
+sudo fail2ban-client get sshd bantime
+```
+
+<img width="340" height="78" alt="image" src="https://github.com/user-attachments/assets/801d4429-3630-42b8-ae49-5cc026fa12f3" />
+
+## Asetusten tuhoaminen ja niiden korjaus
+
+Nyt päästään Puuha pete moodiin. Kokeillaan kuinka kestävä automaatiomme on, tuhoamalla kohdepalvelimen asetukset tarkoituksella ja sitten niiden korjaamisella.
+
+1. Simuloidaan vahinkoa poistamalla Fail2Banin yksi tärkeimmistä tiedostoista, eli sen asetustiedosto `jail.local` ja sammutetaan samalla koko tietoturvapalvelu.
+
+```bash
+sudo rm /etc/fail2ban/jail.local
+sudo systemctl stop fail2ban
+```
+
+<img width="301" height="93" alt="image" src="https://github.com/user-attachments/assets/e48da9ca-842a-48ee-8be6-cec057bad2a5" />
+<br>
+
+2. Tarkistetaan vielä tiedoston tilaa, että onko se oikeasti kadonnut.
+
+```bash
+ls -l /etc/fail2ban/jail.local
+```
+
+<img width="584" height="69" alt="image" src="https://github.com/user-attachments/assets/e285ce80-8878-4618-9678-ff01a5327a43" />
+<br>
+
+3. Ajetaan pelikirjamme jälleen kerran, mutta koska asetustiedosto puuttuu sekä palvelin on sammutettu, voimme luottaa Ansibleen, sillä se tunnistaa poikkeamat ja palauttaa kaiken tekemämme Master Copyn pohjalta tismalleen takaisin.
+
+```bash
+ansible-playbook -i hosts.ini site.yml -u berry
+```
+
+<img width="1001" height="201" alt="image" src="https://github.com/user-attachments/assets/9d19e5da-c52f-4b95-bb39-ad25e91e3e54" />
+<br>
+
+4. Varmistetaan vielä että saiko Ansible ongelman korjattua, onko tietoturva oikeasti taas päällä ja ovatko meidän tunnin (3600) bännit taas voimassa.
+
+```bash
+sudo fail2ban-client status
+sudo fail2ban-client get sshd bantime
+```
+
+<img width="346" height="159" alt="image" src="https://github.com/user-attachments/assets/82355053-789e-4145-8838-134c948ed867" />
+
+## Idempotentti
+
+Olemme lähellä loppua, meidän pitää kuitenkin tarkistaa onko tilamme idempotentti. Se siis tarkoitta, että asennusskripti tekee muutoksia **vain silloin, jos tavoitetila poikkeaa nykytilasta.**
+
+1. Viimeisessä tehtävässä näimme, kuinka Ansible juuri korjasi koko palvelimen täydelliseen kuntoon, ajetaan kuitenkin komento taas uudelleen, jotta voimme olla 100% varmoja.
+
+```bash
+ansible-playbook -i hosts.ini site.yml -u berry
+```
+
+<img width="992" height="206" alt="image" src="https://github.com/user-attachments/assets/b40da4a7-3460-461e-b796-72440308c3eb" />
+<br>
+
+> Kuten kuvasta huomataan, tilamme on idempotentti. Ansible tarkisti, onko ohjelma asennettuna, onko asetustiedosto `jail.local` olemassa sekä että se on täysin identtinen ansiblen version kanssa, ja että palvelu on jo päällä. Koska korjattavaa ei ollut, Ansible ei myöskään tehnyt yhtään muutosta: `changed=0`, eikä myöskään tarvinnut käynnistää Fail2Bania turhaan uudelleen.
+
+## Yhteenveto
+- **Teoria:** Tutustuimme Karvisen väitöskirjaan, jossa selitettiin kuinka tuotannossa pärjää muutamalla peruskomennolla, ja se että "Package-File-Service" järjestys on automaation peruskivi.
+
+- **Asennus:** Asensimme Fail2banin manuaalisesti
+
+- **Automaatio:** Automatisoimme asennuksen rakentamalla Ansible-rooli, joka ajaa omat tietoturva-asetukset (kuten meidän 1t bännit) `.local` tiedoston kautta ilman että koskimme alkuperäistä `jail.conf` tiedostoa.
+
+- **Tuho ja palautus:** Tuhosimme asetukset täysin `purge` komennolla, mutta saimme sen  automaattisesti Ansiblen avulla takaisin nollasta, jonka Ansible teki itsenäisesti.
+
+- **Idempotenssi:** Todistimme, ettäAnsible tarkistaa nykytilan eikä tee turhia muutoksia, vaan tekee niitä vain jos niille on tarvetta.
+
+## Lähteet
+- [Configuration Management of Distributed Systems over Unreliable and Hostile Networks](https://westminsterresearch.westminster.ac.uk/item/w7vvz/configuration-management-of-distributed-systems-over-unreliable-and-hostile-networks)
+
+- [Bemyak: Useful Linux Daemons For Better Pc Experience](https://dev.to/bemyak/useful-linux-daemons-for-better-pc-experience-560)
+
+- [Github Repo: Fail2Ban](https://github.com/fail2ban/fail2ban)
+
+- [Neuralengineer Blog: Fail2Ban: Block brute-force attacks early](https://blog1.neuralengineer.org/fail2ban-block-brute-force-attacks-early-0949ba4653f9)
+
+- [Digitalocean tutorials: "How Fail2Ban Works to Protect Services on a Linux Server"](https://www.digitalocean.com/community/tutorials/how-fail2ban-works-to-protect-services-on-a-linux-server)
+
+
+[^1]: https://westminsterresearch.westminster.ac.uk/item/w7vvz/configuration-management-of-distributed-systems-over-unreliable-and-hostile-networks
+[^2]: https://github.com/fail2ban/fail2ban/wiki/How-fail2ban-works
+[^3]: **Miksi käytin {}:** Tämä tulee Bashin komentotulkinnasta "brace expansion". Sen avulla voimme säästää aikaa jos olemme luomassa useita kansioita kerrallaan, esimerkkinä, komento: `mkdir {a, b, c}` luo kansiot a, b ja c vain tuolla yhdellä komennolla.
+[^4]: https://wiki.archlinux.org/title/Fail2ban#Configuration
+[^5]: https://security.stackexchange.com/questions/271131/fail2ban-syntax-for-setting-bantime-in-a-unit-other-than-seconds
