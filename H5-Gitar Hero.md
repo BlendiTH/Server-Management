@@ -79,7 +79,7 @@ cat ~/.ssh/id_ed25519.pub
 ```
 _HUOM. Jos avaimesi on eri niminen, sen pystyy löytämään ja tulostamaan seuraavalla komennolla: `cat ~/.ssh/id*.pub`_
 
-> <img width="746" height="127" alt="image" src="https://github.com/user-attachments/assets/bf55ea99-9d16-4a7a-9fa0-c75c0b14c3f3" />
+<img width="746" height="127" alt="image" src="https://github.com/user-attachments/assets/bf55ea99-9d16-4a7a-9fa0-c75c0b14c3f3" />
 <br>
 
 3. Seuraavaksi, kopioi avain maalaamalla hiirellä koko ruudulle tulostunut teksti (eli se joka yleensä alkaa sanalla ``ssh-rsa` tai ``ssh-ed25519` ja päättyy koneesi / käyttäjäsi nimeen.
@@ -112,7 +112,7 @@ Voimme nyt jatkaa yhdistämällä pilven omaan koneeseen.
 
 1. Aloitamme ensin menemällä luodun varastomme **"sunshine"** pääsivulle GitHubissa, jotta pystymme kloonaamaan varaston koneellemme, tarvitsemme sen kloonausosoitteen. Paina vihreää **<> Code** -nappia, ja valitse välilehti **SSH** (tärkeää valitä tämä, sillä muut voivat joskus olla toimimatta) ja kopioi siinä näkyvä osoite (esim: `git@github.com:BlendiTH/sunshine.git`):
 
-<img width="409" height="342" alt="image" src="https://github.com/user-attachments/assets/776b23de-5cd5-4562-bd8c-2052f8f9972e" />
+> <img width="409" height="342" alt="image" src="https://github.com/user-attachments/assets/776b23de-5cd5-4562-bd8c-2052f8f9972e" />
 <br>
 
 2. Kloonataan varasto omalle koneelle kirjoittamalla terminaaliin `git clone` ja liittämällä sen perään äsken kopioima osoite. Esimerkiksi:
@@ -162,7 +162,7 @@ git add --all && git commit -m "Lisättiin uusi sunshines.txt tiedosto" ; git pu
 
 7. Käydään vielä tarkistamassa tulokset menemällä selaimella takaisin GitHub-varaston sivulle ja päivittämällä sivu:
 
-<img width="934" height="537" alt="image" src="https://github.com/user-attachments/assets/c0a096da-25ce-4451-aa34-7971f373c3a9" />
+> <img width="934" height="537" alt="image" src="https://github.com/user-attachments/assets/c0a096da-25ce-4451-aa34-7971f373c3a9" />
 
 *Kuten huomaamme, saimme `sunshines.txt` näkyville ja GitHubiin!*
 
