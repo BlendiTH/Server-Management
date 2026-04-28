@@ -267,6 +267,10 @@ git add --all && git commit -m "Lisättiin kommentti site.yml ja testattiin Ansi
 
 <img width="794" height="265" alt="image" src="https://github.com/user-attachments/assets/bd5908ba-b40e-4515-b7bb-aae9ae66b888" />
 
+## Parin haku Moodlesta
+
+Lähetetty viesti Moodlessa, ja pari löydetty. :)
+
 ## Yhteenveto
 * **Teoria:** Opiskeltiin Gitin perusteet (tilannekuvat, paikallisuus) ja ymmärsimme työnkulun `add -> commit -> pull -> push` rakenteen kivalla kuvalla.
 * **GitHub ja SSH:** Luotiin uusi repository ja asennettiin GitHubiin SSH-avaimet turvallista ja salasanoista vapaata yhteyttä varten.
